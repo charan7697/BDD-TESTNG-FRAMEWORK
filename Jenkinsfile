@@ -2,25 +2,28 @@ pipeline {
     agent any
 
     tools {
-       jdk 'JDK_17'
-             maven 'Maven_3.10.0'
+        jdk 'JDK_17'
+        maven 'Maven_3.10.0'
     }
 
     parameters {
-        choice(name: 'BROWSER', choices: ['chrome', 'firefox', 'edge'], description: 'Browser')
-        string(name: 'TAGS', defaultValue: '@smoke', description: 'Cucumber tags, e.g. @smoke or @regression')
+        choice(
+            name: 'BROWSER',
+            choices: ['chrome', 'firefox', 'edge'],
+            description: 'Select browser'
+        )
+
+        string(
+            name: 'TAGS',
+            defaultValue: '@login',
+            description: 'Cucumber tags, e.g. @login or @regression'
+        )
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/<your-username>/bdd-testng-framework.git'
-            }
-        }
 
         stage('Run Tests') {
             steps {
-                // use 'sh' instead of 'bat' on Linux/Mac
                 bat "mvn clean test -Dbrowser=${params.BROWSER} -Dheadless=true -Dcucumber.filter.tags=\"${params.TAGS}\""
             }
         }
@@ -28,6 +31,7 @@ pipeline {
 
     post {
         always {
+
             publishHTML(target: [
                 reportDir: 'target/extent-reports',
                 reportFiles: 'SparkReport.html',
@@ -36,7 +40,11 @@ pipeline {
                 alwaysLinkToLastBuild: true,
                 allowMissing: true
             ])
-            archiveArtifacts artifacts: 'target/**/*.html', allowEmptyArchive: true
+
+            archiveArtifacts(
+                artifacts: 'target/**/*.html',
+                allowEmptyArchive: true
+            )
         }
     }
 }
