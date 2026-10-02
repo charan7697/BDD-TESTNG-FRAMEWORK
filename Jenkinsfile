@@ -20,4 +20,22 @@ pipeline {
             }
         }
     }
+
+    post {
+        always {
+            publishHTML([
+                allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'target/extent-reports',
+                reportFiles: 'SparkReport.html',
+                reportName: 'Extent Report'
+            ])
+
+            archiveArtifacts(
+                artifacts: 'target/extent-reports/**',
+                allowEmptyArchive: true
+            )
+        }
+    }
 }
