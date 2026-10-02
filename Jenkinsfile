@@ -5,7 +5,6 @@ pipeline {
             jdk 'JDK_17'
             maven 'Maven_3.10.0'
         }
-    }
 
     parameters {
         choice(name: 'BROWSER', choices: ['chrome', 'firefox', 'edge'], description: 'Browser')
