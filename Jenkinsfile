@@ -16,7 +16,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                bat 'mvn test'
+                bat "mvn test -Dcucumber.filter.tags=\"${params.TEST_TAG}\""
             }
         }
     }
@@ -33,7 +33,7 @@ pipeline {
             ])
 
             archiveArtifacts(
-                artifacts: 'target/extent-reports/**',
+                artifacts: 'target/extent-reports/**,target/cucumber-reports/**',
                 allowEmptyArchive: true
             )
         }
