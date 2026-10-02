@@ -7,7 +7,7 @@ import org.testng.annotations.DataProvider;
 @CucumberOptions(
         features = "src/test/resources",
         glue = {"stepDefinition", "hooks"},
-        tags = "@login,@cart",
+        tags = "@login or @cart",
         plugin = {
                 "pretty",
                 "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:",
