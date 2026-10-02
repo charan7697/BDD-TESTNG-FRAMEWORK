@@ -1,6 +1,14 @@
 pipeline {
     agent any
 
+    parameters {
+        string(
+            name: 'TEST_TAG',
+            defaultValue: '',
+            description: 'Enter Cucumber tag, e.g. @login or @cart'
+        )
+    }
+
     tools {
         jdk 'JDK_17'
         maven 'Maven_3.10.0'
