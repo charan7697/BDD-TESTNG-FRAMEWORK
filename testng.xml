@@ -1,0 +1,7 @@
+<suite name="BDD Suite">
+    <test name="UI Tests">
+        <classes>
+            <class name="runner.TestRunner"/>
+        </classes>
+    </test>
+</suite>

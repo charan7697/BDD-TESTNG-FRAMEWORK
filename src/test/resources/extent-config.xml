@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spark>
+    <configuration>
+        <theme>standard</theme>
+        <documentTitle>BDD Automation Report</documentTitle>
+        <reportName>Saucedemo UI Regression</reportName>
+        <timeStampFormat>dd-MM-yyyy HH:mm:ss</timeStampFormat>
+    </configuration>
+</spark>
