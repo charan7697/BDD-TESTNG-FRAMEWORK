@@ -1,49 +1,42 @@
 pipeline {
     agent any
 
-    parameters {
-        string(
-            name: 'TEST_TAG',
-            defaultValue: '',
-            description: 'Enter Cucumber tag, e.g. @login or @cart'
-        )
+    tools {
+       jdk 'JDK_17'
+             maven 'Maven_3.10.0'
     }
 
-    tools {
-        jdk 'JDK_17'
-        maven 'Maven_3.10.0'
+    parameters {
+        choice(name: 'BROWSER', choices: ['chrome', 'firefox', 'edge'], description: 'Browser')
+        string(name: 'TAGS', defaultValue: '@smoke', description: 'Cucumber tags, e.g. @smoke or @regression')
     }
 
     stages {
-
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                bat 'mvn clean compile'
+                git branch: 'main', url: 'https://github.com/<your-username>/bdd-testng-framework.git'
             }
         }
 
         stage('Run Tests') {
             steps {
-                bat "mvn test -Dcucumber.filter.tags=\"${params.TEST_TAG}\""
+                // use 'sh' instead of 'bat' on Linux/Mac
+                bat "mvn clean test -Dbrowser=${params.BROWSER} -Dheadless=true -Dcucumber.filter.tags=\"${params.TAGS}\""
             }
         }
     }
 
     post {
         always {
-            publishHTML([
-                allowMissing: true,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
+            publishHTML(target: [
                 reportDir: 'target/extent-reports',
                 reportFiles: 'SparkReport.html',
-                reportName: 'Extent Report'
+                reportName: 'Extent Report',
+                keepAll: true,
+                alwaysLinkToLastBuild: true,
+                allowMissing: true
             ])
-
-            archiveArtifacts(
-                artifacts: 'target/extent-reports/**,target/cucumber-reports/**',
-                allowEmptyArchive: true
-            )
+            archiveArtifacts artifacts: 'target/**/*.html', allowEmptyArchive: true
         }
     }
 }
